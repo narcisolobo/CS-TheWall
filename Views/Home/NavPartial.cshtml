@@ -1,0 +1,12 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light shadow py-0 fixed-top">
+  <a class="navbar-brand mr-auto larger mt-1" href="#">THE WALL</a>
+  @{
+    if (ViewBag.LoggedUser == null){
+      <p class="mb-0">Please login or register below.</p>
+    }
+    else {
+      <p class="mb-0 mr-3">@ViewBag.LoggedUserName</p>
+      <a class="btn btn-danger" role="button" href="/logout">LOGOUT</a>
+    }
+  }
+</nav>

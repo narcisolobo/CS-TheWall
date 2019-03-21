@@ -1,0 +1,62 @@
+@using TheWall.Models
+@model Message
+
+@{
+  ViewData["Title"] = "The Wall";
+}
+
+<partial name="NavPartial"/>
+<main>
+  <div class="row">
+    <div class="col-3"></div>
+    <div class="col-6">
+
+      <!-- form -->
+      <div class="bg-light rounded p-3 shadow mb-3">
+        <h1 class="h5 font-weight-bold mb-3">POST A MESSAGE:</h1>
+        <form asp-action="PostMessage" asp-controller="Home" method="POST">
+          <textarea asp-for="MessageBody" rows="3" class="form-control"></textarea>
+          <span style="color:red;font-size:small" asp-validation-for="MessageBody"></span>
+          <div class="text-right mt-3">
+            <button type="submit" class="btn btn-dark">SUBMIT MESSAGE</button>
+          </div>
+        </form>
+      </div>
+      <!-- form -->
+
+      <!-- messages -->
+      <div class="bg-light rounded-top p-3 shadow mb-0">
+        <h1 class="h5 font-weight-bold mb-0">POSTED MESSAGES:</h1>
+      </div>
+
+      @foreach (var message in ViewBag.AllMessages) {
+        <div class="bg-light rounded-bottom p-3 shadow mb-3">
+          <div class="px-3 mb-3">
+            <p class="mt-2 mb-2 font-weight-bold">@message.User.FirstName @message.User.LastName - @message.CreatedAt.ToString("MMMM dd, yyyy")</p>
+            <p class="left-border text-justify pl-3"><q>@message.MessageBody</q></p>
+            @if (message.UserId == ViewBag.LoggedUser.UserId) {
+            <div class="text-right">
+              <a role="button" class="btn btn-danger btn-sm text-light mb-3">DELETE</a>
+            </div>
+            }
+            @foreach (var comment in ViewBag.AllComments) {
+                if (comment.MessageId == message.MessageId) {
+                  <div class="px-3 mb-3">
+                    <p class="pl-3 mb-0" style="font-size:small;">@comment.User.FirstName @comment.User.LastName - @comment.CreatedAt.ToString("MMM dd, yyyy")</p>
+                    <p class="text-justify pl-3" style="font-size:small;">@comment.CommentBody</p>
+                  </div>
+                }
+            }
+            <form asp-action="PostComment" asp-route-MessageId="@message.MessageId" asp-controller="Home" method="POST" class="pl-4">
+              <partial name="CommentPartial"/>
+            </form>
+          </div>
+        </div>
+      }
+      </div>
+      <!-- messages -->
+
+    </div>
+    <div class="col-3"></div>
+  </div>
+</main>
